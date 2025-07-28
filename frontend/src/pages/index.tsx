@@ -12,7 +12,15 @@ import {
   Loader2,
   Brain,
   Zap,
-  Globe
+  Globe,
+  Sparkles,
+  Cpu,
+  Database,
+  Network,
+  ArrowRight,
+  Play,
+  Pause,
+  RotateCcw
 } from 'lucide-react';
 
 interface AnalysisResult {
@@ -132,13 +140,13 @@ const Home: React.FC = () => {
   const getAgentIcon = (status: string) => {
     switch (status) {
       case 'active':
-        return <Loader2 className="w-4 h-4 animate-spin text-blue-500" />;
+        return <Loader2 className="w-5 h-5 animate-spin text-emerald-500" />;
       case 'completed':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-emerald-500" />;
       case 'error':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircle className="w-5 h-5 text-red-500" />;
       default:
-        return <div className="w-4 h-4 bg-gray-300 rounded-full" />;
+        return <div className="w-5 h-5 bg-gray-300 rounded-full" />;
     }
   };
 
@@ -156,60 +164,102 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Brain className="w-12 h-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-gray-900">DocuSynth AI</h1>
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
+              <Brain className="w-16 h-16 text-white relative z-10 mr-4" />
+            </div>
+            <div>
+              <h1 className="text-6xl font-bold bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
+                DocuSynth AI
+              </h1>
+              <div className="flex items-center justify-center mt-2">
+                <Sparkles className="w-5 h-5 text-emerald-400 mr-2" />
+                <span className="text-emerald-400 font-medium">Powered by NVIDIA Nemotron Super 49B</span>
+              </div>
+            </div>
           </div>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Multi-agent code intelligence system that auto-generates documentation and provides insights across your codebase
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Multi-agent code intelligence system that auto-generates comprehensive documentation and provides 
+            <span className="text-emerald-400 font-semibold"> intelligent insights</span> across your codebase
           </p>
         </div>
 
         {/* Upload Section */}
         {analysisStatus === 'idle' && (
-          <div className="max-w-2xl mx-auto mb-8">
+          <div className="max-w-3xl mx-auto mb-12">
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+              className={`backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:scale-105 hover:bg-white/15 ${
                 isDragActive
-                  ? 'border-blue-400 bg-blue-50'
-                  : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                  ? 'border-emerald-400 bg-emerald-500/20 scale-105'
+                  : 'hover:border-emerald-400/50'
               }`}
             >
               <input {...getInputProps()} />
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-lg font-medium text-gray-700 mb-2">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur-lg opacity-50"></div>
+                <Upload className="w-16 h-16 text-white relative z-10 mx-auto" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-4">
                 {isDragActive ? 'Drop your codebase here' : 'Upload your codebase'}
-              </p>
-              <p className="text-gray-500">
+              </h2>
+              <p className="text-gray-300 text-lg mb-6">
                 Drag and drop a .zip file containing your codebase, or click to browse
               </p>
+              <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
+                <div className="flex items-center">
+                  <Cpu className="w-4 h-4 mr-2" />
+                  <span>GPU Accelerated</span>
+                </div>
+                <div className="flex items-center">
+                  <Database className="w-4 h-4 mr-2" />
+                  <span>Multi-Agent AI</span>
+                </div>
+                <div className="flex items-center">
+                  <Network className="w-4 h-4 mr-2" />
+                  <span>Real-time Analysis</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {/* Analysis Progress */}
         {analysisStatus === 'analyzing' && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-900">Analyzing Codebase</h2>
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8">
+              <div className="flex items-center mb-6">
+                <div className="relative mr-4">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
+                  <Loader2 className="w-8 h-8 text-white relative z-10 animate-spin" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Analyzing Codebase</h2>
+                  <p className="text-gray-300">Our AI agents are processing your code...</p>
+                </div>
               </div>
               
               {/* Progress Bar */}
-              <div className="mb-6">
-                <div className="flex justify-between text-sm text-gray-600 mb-2">
-                  <span>Progress</span>
-                  <span>{Math.round(progress * 100)}%</span>
+              <div className="mb-8">
+                <div className="flex justify-between text-sm text-gray-300 mb-3">
+                  <span>Analysis Progress</span>
+                  <span className="text-emerald-400 font-semibold">{Math.round(progress * 100)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
                   <div
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-gradient-to-r from-emerald-400 to-blue-500 h-3 rounded-full transition-all duration-500 ease-out"
                     style={{ width: `${progress * 100}%` }}
                   />
                 </div>
@@ -217,16 +267,29 @@ const Home: React.FC = () => {
 
               {/* Agent Status */}
               {agentStatus && (
-                <div className="space-y-3">
-                  <h3 className="font-medium text-gray-900">Agent Status</h3>
-                  {Object.entries(agentStatus).map(([agent, status]) => (
-                    agent !== 'overall_progress' && (
-                      <div key={agent} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">{getAgentName(agent)}</span>
-                        {getAgentIcon(status)}
-                      </div>
-                    )
-                  ))}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-white text-lg">Agent Status</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {Object.entries(agentStatus).map(([agent, status]) => (
+                      agent !== 'overall_progress' && (
+                        <div key={agent} className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm text-gray-300">{getAgentName(agent)}</span>
+                            {getAgentIcon(status)}
+                          </div>
+                          <div className="w-full bg-white/10 rounded-full h-1">
+                            <div
+                              className={`h-1 rounded-full transition-all duration-300 ${
+                                status === 'completed' ? 'bg-emerald-400' : 
+                                status === 'active' ? 'bg-blue-400' : 'bg-gray-400'
+                              }`}
+                              style={{ width: status === 'completed' ? '100%' : status === 'active' ? '60%' : '0%' }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -235,11 +298,14 @@ const Home: React.FC = () => {
 
         {/* Error Display */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="max-w-3xl mx-auto mb-12">
+            <div className="backdrop-blur-xl bg-red-500/10 border border-red-400/20 rounded-2xl p-6">
               <div className="flex items-center">
-                <AlertCircle className="w-5 h-5 text-red-500 mr-3" />
-                <p className="text-red-700">{error}</p>
+                <AlertCircle className="w-6 h-6 text-red-400 mr-4" />
+                <div>
+                  <h3 className="text-lg font-semibold text-red-400 mb-1">Error</h3>
+                  <p className="text-red-300">{error}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -247,61 +313,80 @@ const Home: React.FC = () => {
 
         {/* Results Display */}
         {result && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Project Summary */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center mb-4">
-                <FileText className="w-6 h-6 text-blue-500 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-900">Project Summary</h2>
-              </div>
-              <p className="text-gray-700 mb-4">{result.project_summary}</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="flex items-center">
-                  <Code className="w-4 h-4 text-gray-500 mr-2" />
-                  <span>{result.total_files} files analyzed</span>
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8">
+              <div className="flex items-center mb-6">
+                <div className="relative mr-4">
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full blur-lg opacity-75"></div>
+                  <FileText className="w-8 h-8 text-white relative z-10" />
                 </div>
-                <div className="flex items-center">
-                  <Library className="w-4 h-4 text-gray-500 mr-2" />
-                  <span>{result.libraries_used.length} libraries used</span>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Project Summary</h2>
+                  <p className="text-gray-300">Comprehensive analysis of your codebase</p>
+                </div>
+              </div>
+              <p className="text-gray-200 text-lg leading-relaxed mb-6">{result.project_summary}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                  <Code className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-white">{result.total_files}</div>
+                  <div className="text-sm text-gray-300">Files Analyzed</div>
+                </div>
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                  <Library className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-white">{result.libraries_used.length}</div>
+                  <div className="text-sm text-gray-300">Libraries Used</div>
                 </div>
                 {result.analysis_time && (
-                  <div className="flex items-center">
-                    <Zap className="w-4 h-4 text-gray-500 mr-2" />
-                    <span>{result.analysis_time.toFixed(2)}s analysis time</span>
+                  <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                    <Zap className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-white">{result.analysis_time.toFixed(2)}s</div>
+                    <div className="text-sm text-gray-300">Analysis Time</div>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Files Analysis */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {result.files.map((file, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-lg p-6">
-                  <div className="flex items-center mb-4">
-                    <Code className="w-5 h-5 text-blue-500 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-900">{file.filename}</h3>
+                <div key={index} className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8">
+                  <div className="flex items-center mb-6">
+                    <div className="relative mr-4">
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-lg opacity-75"></div>
+                      <Code className="w-6 h-6 text-white relative z-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">{file.filename}</h3>
                   </div>
                   
-                  <p className="text-gray-700 mb-4">{file.summary}</p>
+                  <p className="text-gray-200 mb-6 leading-relaxed">{file.summary}</p>
 
                   {/* Functions */}
                   {file.functions.length > 0 && (
-                    <div className="mb-4">
-                      <h4 className="font-medium text-gray-900 mb-2">Functions</h4>
-                      <div className="space-y-2">
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-white mb-4 flex items-center">
+                        <Database className="w-5 h-5 mr-2 text-emerald-400" />
+                        Functions ({file.functions.length})
+                      </h4>
+                      <div className="grid gap-4">
                         {file.functions.map((func, funcIndex) => (
-                          <div key={funcIndex} className="bg-gray-50 rounded p-3">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-mono text-sm font-medium">{func.name}</span>
+                          <div key={funcIndex} className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-mono text-sm font-semibold text-emerald-400">{func.name}</span>
                               {func.returns && (
-                                <span className="text-xs text-gray-500">→ {func.returns}</span>
+                                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded">→ {func.returns}</span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-600">{func.doc}</p>
+                            <p className="text-sm text-gray-300 mb-2">{func.doc}</p>
                             {func.parameters.length > 0 && (
-                              <p className="text-xs text-gray-500 mt-1">
-                                Parameters: {func.parameters.join(', ')}
-                              </p>
+                              <div className="flex flex-wrap gap-1">
+                                {func.parameters.map((param, paramIndex) => (
+                                  <span key={paramIndex} className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">
+                                    {param}
+                                  </span>
+                                ))}
+                              </div>
                             )}
                           </div>
                         ))}
@@ -311,25 +396,30 @@ const Home: React.FC = () => {
 
                   {/* External Libraries */}
                   {file.external_libraries.length > 0 && (
-                    <div className="mb-4">
-                      <h4 className="font-medium text-gray-900 mb-2">External Libraries</h4>
-                      <div className="space-y-2">
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-white mb-4 flex items-center">
+                        <Library className="w-5 h-5 mr-2 text-blue-400" />
+                        External Libraries ({file.external_libraries.length})
+                      </h4>
+                      <div className="grid gap-4">
                         {file.external_libraries.map((lib, libIndex) => (
-                          <div key={libIndex} className="flex items-center justify-between bg-blue-50 rounded p-3">
-                            <div>
-                              <span className="font-medium text-sm">{lib.name}</span>
-                              <p className="text-xs text-gray-600">{lib.doc_summary}</p>
+                          <div key={libIndex} className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <span className="font-semibold text-blue-400">{lib.name}</span>
+                                <p className="text-sm text-gray-300 mt-1">{lib.doc_summary}</p>
+                              </div>
+                              {lib.link && (
+                                <a
+                                  href={lib.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                  <Globe className="w-5 h-5" />
+                                </a>
+                              )}
                             </div>
-                            {lib.link && (
-                              <a
-                                href={lib.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800"
-                              >
-                                <Globe className="w-4 h-4" />
-                              </a>
-                            )}
                           </div>
                         ))}
                       </div>
@@ -339,16 +429,19 @@ const Home: React.FC = () => {
                   {/* Cross References */}
                   {file.cross_references.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-gray-900 mb-2">Cross References</h4>
-                      <div className="space-y-2">
+                      <h4 className="font-semibold text-white mb-4 flex items-center">
+                        <Link className="w-5 h-5 mr-2 text-purple-400" />
+                        Cross References ({file.cross_references.length})
+                      </h4>
+                      <div className="grid gap-4">
                         {file.cross_references.map((ref, refIndex) => (
-                          <div key={refIndex} className="bg-green-50 rounded p-3">
-                            <div className="flex items-center mb-1">
-                              <Link className="w-4 h-4 text-green-600 mr-2" />
-                              <span className="font-mono text-sm font-medium">{ref.function}</span>
+                          <div key={refIndex} className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-4">
+                            <div className="flex items-center mb-2">
+                              <Link className="w-4 h-4 text-purple-400 mr-2" />
+                              <span className="font-mono text-sm font-semibold text-purple-400">{ref.function}</span>
                             </div>
-                            <p className="text-xs text-gray-600">
-                              Used in: {ref.used_in.join(', ')}
+                            <p className="text-sm text-gray-300">
+                              Used in: <span className="text-purple-300">{ref.used_in.join(', ')}</span>
                             </p>
                           </div>
                         ))}
@@ -363,7 +456,7 @@ const Home: React.FC = () => {
 
         {/* Reset Button */}
         {(analysisStatus === 'completed' || analysisStatus === 'error') && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-12">
             <button
               onClick={() => {
                 setAnalysisStatus('idle');
@@ -373,8 +466,9 @@ const Home: React.FC = () => {
                 setError(null);
                 setUploadId(null);
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+              className="backdrop-blur-xl bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 hover:scale-105 flex items-center mx-auto"
             >
+              <RotateCcw className="w-5 h-5 mr-2" />
               Analyze Another Codebase
             </button>
           </div>
