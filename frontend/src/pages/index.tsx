@@ -64,6 +64,11 @@ const Home: React.FC = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // API base URL - will work on both local and Brev
+  const API_BASE = typeof window !== 'undefined' 
+    ? `${window.location.protocol}//${window.location.hostname}:8000`
+    : 'http://localhost:8000';
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
 
@@ -80,7 +85,7 @@ const Home: React.FC = () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      const uploadResponse = await axios.post('http://localhost:8000/upload', formData, {
+      const uploadResponse = await axios.post(`${API_BASE}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -91,7 +96,7 @@ const Home: React.FC = () => {
       setAnalysisStatus('analyzing');
 
       // Start analysis
-      await axios.post(`http://localhost:8000/analyze/${upload_id}`);
+      await axios.post(`${API_BASE}/analyze/${upload_id}`);
 
       // Poll for results
       pollForResults(upload_id);
@@ -99,14 +104,14 @@ const Home: React.FC = () => {
       setError('Upload failed. Please try again.');
       setAnalysisStatus('error');
     }
-  }, []);
+  }, [API_BASE]);
 
   const pollForResults = async (id: string) => {
     const pollInterval = setInterval(async () => {
       try {
         const [statusResponse, resultResponse] = await Promise.all([
-          axios.get(`http://localhost:8000/status/${id}`),
-          axios.get(`http://localhost:8000/analyze/${id}`)
+          axios.get(`${API_BASE}/status/${id}`),
+          axios.get(`${API_BASE}/analyze/${id}`)
         ]);
 
         setAgentStatus(statusResponse.data);
