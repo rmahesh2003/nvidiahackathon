@@ -5,12 +5,7 @@ pydantic==2.5.0
 langchain==0.0.350
 langchain-community==0.0.1
 langchain-core==0.1.0
-torch>=2.0.0
-transformers>=4.35.0
-accelerate>=0.20.0
-bitsandbytes>=0.41.0
-sentencepiece>=0.1.99
-protobuf>=3.20.0
+nemo-toolkit==1.21.1
 tree-sitter==0.20.4
 beautifulsoup4==4.12.2
 requests==2.31.0

@@ -1,10 +1,10 @@
 # 🧠 DocuSynth AI
 
-> **Multi-agent code intelligence system** that auto-generates internal and external documentation, *proactively* summarizes unfamiliar code, and offers relevant insights across a team codebases — powered by **NVIDIA Nemotron Super 49B** + LangChain + Brev GPU acceleration.
+> **Multi-agent code intelligence system** that auto-generates internal and external documentation, *proactively* summarizes unfamiliar code, and offers relevant insights across a team codebase — powered by NVIDIA NeMo + LangChain + Nemotron.
 
 ## 🎯 Project Overview
 
-DocuSynth AI is a sophisticated multi-agent system that automatically analyzes codebases to generate comprehensive documentation. It combines NVIDIA's **Nemotron Super 49B** model with LangChain to create intelligent agents that:
+DocuSynth AI is a sophisticated multi-agent system that automatically analyzes codebases to generate comprehensive documentation. It combines NVIDIA's NeMo framework with LangChain to create intelligent agents that:
 
 - **InternalDocAgent**: Analyzes code structure and generates function-level documentation
 - **LibraryDocAgent**: Identifies external dependencies and fetches relevant documentation
@@ -24,13 +24,13 @@ DocuSynth AI is a sophisticated multi-agent system that automatically analyzes c
          +-----------------------------+
          |  🧠 Backend (FastAPI)      |
          |                             |
-         |   - Nemotron Super 49B     |
+         |   - NeMo Agent Orchestration|
          |   - LangChain Tools         |
          |   - File parsing / indexing |
          +-----------------------------+
                      ↓
          +------------------------------+
-         |     🔀 Nemotron Agents System |
+         |     🔀 NeMo Agents System     |
          |                              |
          |  - InternalDocAgent          |
          |  - LibraryDocAgent           |
@@ -45,25 +45,9 @@ DocuSynth AI is a sophisticated multi-agent system that automatically analyzes c
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.9+
+- Python 3.8+
 - Node.js 16+
-- NVIDIA GPU (required for Nemotron Super 49B)
-- CUDA toolkit (for GPU acceleration)
-- NVIDIA Brev account with GPU credits
-
-### AI Configuration
-Copy the configuration template and customize for your environment:
-```bash
-cp backend/config.env.example backend/.env
-# Edit .env with your preferred settings
-```
-
-### Brev Deployment
-Deploy as a launchable on NVIDIA Brev:
-```bash
-# The brev.yaml file is configured for GPU deployment
-# Deploy with: brev deploy
-```
+- NVIDIA GPU (optional, for local NeMo inference)
 
 ### Installation
 
@@ -83,17 +67,11 @@ npm install
 ```bash
 # Terminal 1 - Backend
 cd backend
-python -m uvicorn app.main:app --reload
+uvicorn main:app --reload
 
 # Terminal 2 - Frontend
 cd frontend
 npm run dev
-```
-
-4. **Test AI Integration (Optional):**
-```bash
-cd backend
-python test_ai.py
 ```
 
 ## 📁 Project Structure
@@ -133,11 +111,9 @@ docusynth-ai/
 | **Frontend** | Next.js + React | Modern UI for file upload and results display |
 | **Backend** | FastAPI | High-performance API with automatic docs |
 | **AI Agents** | NVIDIA NeMo + LangChain | Multi-agent reasoning and orchestration |
-| **LLM** | NVIDIA Nemotron Super 49B | Intelligent code documentation generation |
+| **LLM** | Nemotron | Code understanding and documentation generation |
 | **Code Parsing** | tree-sitter | AST parsing for code structure analysis |
 | **Documentation** | requests + BeautifulSoup | Fetching external library docs |
-| **AI Configuration** | Environment-based | Flexible model and performance settings |
-| **Caching** | In-memory | Performance optimization for repeated queries |
 | **Deployment** | Vercel + Railway | Easy deployment and scaling |
 
 ## 📊 Output Format
@@ -194,21 +170,12 @@ The system generates structured JSON output:
 ## 🌟 Features
 
 ### ✅ Core Features
-- [x] Multi-file codebase analysis
-- [x] Function-level documentation generation
-- [x] External library documentation fetching
-- [x] Cross-reference detection
-- [x] Structured JSON output
-- [x] Modern web interface
-
-### 🤖 AI Enhancements
-- [x] Real NVIDIA Nemotron Super 49B integration with fallback system
-- [x] Intelligent code documentation generation with architectural insights
-- [x] Enhanced prompts for creative and comprehensive analysis
-- [x] Configurable AI model settings for GPU optimization
-- [x] Performance caching for repeated queries
-- [x] Environment-based configuration management
-- [x] Brev launchable deployment with GPU acceleration
+- [ ] Multi-file codebase analysis
+- [ ] Function-level documentation generation
+- [ ] External library documentation fetching
+- [ ] Cross-reference detection
+- [ ] Structured JSON output
+- [ ] Modern web interface
 
 ### 🚀 Future Extensions
 - [ ] GitHub repository integration
