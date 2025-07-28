@@ -8,14 +8,15 @@ import uuid
 import time
 from typing import Dict, Any, List
 
-from app.models.schemas import (
-    UploadResponse, AnalysisRequest, AnalysisResponse, 
-    ProjectAnalysis, FileAnalysis, AgentStatus
-)
 from app.core.file_parser import FileParser
 from app.agents.internal_doc_agent import InternalDocAgent
 from app.agents.library_doc_agent import LibraryDocAgent
 from app.agents.context_manager_agent import ContextManagerAgent
+from app.config import Config
+from app.models import (
+    UploadResponse, AnalysisResponse, 
+    ProjectAnalysis, FileAnalysis, AgentStatus
+)
 
 app = FastAPI(
     title="DocuSynth AI API",
@@ -317,4 +318,10 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    config = Config()
+    uvicorn.run(
+        app, 
+        host=config.API_HOST, 
+        port=config.API_PORT,
+        debug=config.DEBUG
+    ) 
