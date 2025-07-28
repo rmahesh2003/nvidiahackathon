@@ -13,6 +13,11 @@ class NemotronLLM(LLM):
         # In production, this would connect to Nemotron API
         self.model_name = "llama-3.3-nemotron-super-49b-v1"
     
+    @property
+    def _llm_type(self) -> str:
+        """Return type of LLM."""
+        return "nemotron"
+    
     def _call(self, prompt: str, stop: List[str] = None) -> str:
         """Generate response using Nemotron reasoning"""
         # Simulate Nemotron's reasoning capabilities
