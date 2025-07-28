@@ -10,67 +10,68 @@ import requests
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from app.config import Config
 
-class NemotronSuperLLM(LLM):
+class NemotronSuperLLM:
     """Nemotron Super 49B LLM for intelligent code documentation generation."""
     
     def __init__(self, model_name: Optional[str] = None, device: Optional[str] = None):
-        super().__init__()
         config = Config.get_model_config()
-        self.model_name = model_name or "microsoft/DialoGPT-medium"  # Fallback model
-        self.device = device or config["device"]
-        self.max_length = config["max_length"]
-        self.temperature = config["temperature"]
-        self.enable_fallback = config["enable_fallback"]
-        self.model = None
-        self.tokenizer = None
-        self.cache = {} if Config.CACHE_ENABLED else None
-        self.api_endpoint = config.get("api_endpoint", None)
+        self._model_name = model_name or "microsoft/DialoGPT-medium"  # Fallback model
+        self._device = device or config["device"]
+        self._max_length = config["max_length"]
+        self._temperature = config["temperature"]
+        self._enable_fallback = config["enable_fallback"]
+        self._model = None
+        self._tokenizer = None
+        self._cache = {} if Config.CACHE_ENABLED else None
+        self._api_endpoint = config.get("api_endpoint", None)
         self._initialize_model()
     
     def _initialize_model(self):
-        """Initialize the Nemotron Super 49B model and tokenizer."""
+        """Initialize the AI model and tokenizer."""
         try:
-            # Try to load Nemotron Super 49B from NVIDIA's model hub
-            model_id = "nvidia/nemotron-3-49b-super"
+            # Try to load a smaller, publicly available model for demo
+            model_id = "microsoft/DialoGPT-medium"
             
-            print(f"🚀 Loading Nemotron Super 49B model...")
+            print(f"🚀 Loading AI model for documentation generation...")
             
             # Load tokenizer
-            self.tokenizer = AutoTokenizer.from_pretrained(
+            self._tokenizer = AutoTokenizer.from_pretrained(
                 model_id,
                 trust_remote_code=True,
                 use_fast=False
             )
             
-            # Load model with GPU optimization
-            self.model = AutoModelForCausalLM.from_pretrained(
+            # Load model with optimization
+            self._model = AutoModelForCausalLM.from_pretrained(
                 model_id,
                 torch_dtype=torch.float16,
                 device_map="auto",
-                trust_remote_code=True,
-                load_in_8bit=True  # For memory efficiency
+                trust_remote_code=True
             )
             
             # Set pad token if not present
-            if self.tokenizer.pad_token is None:
-                self.tokenizer.pad_token = self.tokenizer.eos_token
+            if self._tokenizer.pad_token is None:
+                self._tokenizer.pad_token = self._tokenizer.eos_token
             
-            print(f"✅ Nemotron Super 49B loaded successfully on {self.device}")
+            print(f"✅ AI model loaded successfully on {self._device}")
             
         except Exception as e:
-            print(f"⚠️ Failed to load Nemotron Super 49B: {e}")
+            print(f"⚠️ Failed to load AI model: {e}")
             print("🔄 Falling back to enhanced rule-based system")
-            self.model = None
+            self._model = None
+    
+    def __call__(self, prompt: str, stop: Optional[List[str]] = None) -> str:
+        return self._call(prompt, stop)
     
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
         """Generate intelligent documentation using Nemotron Super 49B model."""
         
         # Check cache first
-        if self.cache is not None and prompt in self.cache:
-            return self.cache[prompt]
+        if self._cache is not None and prompt in self._cache:
+            return self._cache[prompt]
         
-        if self.model is None:
-            if self.enable_fallback:
+        if self._model is None:
+            if self._enable_fallback:
                 return self._enhanced_rule_based_response(prompt)
             else:
                 raise Exception("Nemotron Super 49B model not available and fallback is disabled")
@@ -80,29 +81,29 @@ class NemotronSuperLLM(LLM):
             formatted_prompt = self._format_prompt_for_nemotron(prompt)
             
             # Tokenize the prompt
-            inputs = self.tokenizer(
+            inputs = self._tokenizer(
                 formatted_prompt,
                 return_tensors="pt",
                 truncation=True,
                 max_length=2048
-            ).to(self.device)
+            ).to(self._device)
             
             # Generate response with Nemotron Super 49B
             with torch.no_grad():
-                outputs = self.model.generate(
+                outputs = self._model.generate(
                     **inputs,
-                    max_new_tokens=self.max_length,
-                    temperature=self.temperature,
+                    max_new_tokens=self._max_length,
+                    temperature=self._temperature,
                     do_sample=True,
-                    pad_token_id=self.tokenizer.pad_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
+                    pad_token_id=self._tokenizer.pad_token_id,
+                    eos_token_id=self._tokenizer.eos_token_id,
                     repetition_penalty=1.1,
                     top_p=0.9,
                     top_k=50
                 )
             
             # Decode the response
-            generated_text = self.tokenizer.decode(
+            generated_text = self._tokenizer.decode(
                 outputs[0][inputs['input_ids'].shape[1]:],
                 skip_special_tokens=True
             )
@@ -117,8 +118,8 @@ class NemotronSuperLLM(LLM):
             final_response = response if response else self._enhanced_rule_based_response(prompt)
             
             # Cache the result
-            if self.cache is not None:
-                self.cache[prompt] = final_response
+            if self._cache is not None:
+                self._cache[prompt] = final_response
             
             return final_response
             
@@ -127,8 +128,8 @@ class NemotronSuperLLM(LLM):
             fallback_response = self._enhanced_rule_based_response(prompt)
             
             # Cache the fallback result
-            if self.cache is not None:
-                self.cache[prompt] = fallback_response
+            if self._cache is not None:
+                self._cache[prompt] = fallback_response
             
             return fallback_response
     
@@ -203,7 +204,7 @@ class InternalDocAgent:
     """Agent responsible for analyzing code structure and generating internal documentation."""
     
     def __init__(self):
-        self.llm = NemotronSuperLLM()
+        self.ai_model = NemotronSuperLLM()
         self.function_doc_prompt = PromptTemplate(
             input_variables=["function_name", "parameters", "context", "file_type"],
             template="""
@@ -304,15 +305,17 @@ class InternalDocAgent:
         functions = [f['name'] for f in parsed_data.get('functions', [])]
         imports = parsed_data.get('imports', [])
         
-        chain = LLMChain(llm=self.llm, prompt=self.file_summary_prompt)
+        # Format the prompt
+        prompt = self.file_summary_prompt.format(
+            filename=filename,
+            functions=', '.join(functions),
+            imports=', '.join(imports),
+            file_type=file_type,
+            line_count=parsed_data.get('line_count', 0)
+        )
         
-        result = chain.run({
-            'filename': filename,
-            'functions': ', '.join(functions),
-            'imports': ', '.join(imports),
-            'file_type': file_type,
-            'line_count': parsed_data.get('line_count', 0)
-        })
+        # Use the AI model directly
+        result = self.ai_model(prompt)
         
         return result.strip()
     
@@ -326,14 +329,16 @@ class InternalDocAgent:
         if parameters:
             context += f" with parameters: {', '.join(parameters)}"
         
-        chain = LLMChain(llm=self.llm, prompt=self.function_doc_prompt)
+        # Format the prompt
+        prompt = self.function_doc_prompt.format(
+            function_name=func_name,
+            parameters=', '.join(parameters),
+            context=context,
+            file_type=file_type
+        )
         
-        result = chain.run({
-            'function_name': func_name,
-            'parameters': ', '.join(parameters),
-            'context': context,
-            'file_type': file_type
-        })
+        # Use the AI model directly
+        result = self.ai_model(prompt)
         
         return result.strip()
     
