@@ -130,7 +130,7 @@ async def root():
 @app.get("/demo")
 async def demo():
     """Serve the demo frontend"""
-    return FileResponse("../frontend/simple_demo.html")
+    return FileResponse("../frontend/enhanced_demo.html")
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
