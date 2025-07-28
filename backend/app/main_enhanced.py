@@ -130,7 +130,10 @@ async def root():
 @app.get("/demo")
 async def demo():
     """Serve the demo frontend"""
-    return FileResponse("../frontend/enhanced_demo.html")
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    frontend_path = os.path.join(current_dir, "..", "frontend", "enhanced_demo.html")
+    return FileResponse(frontend_path)
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
